@@ -8,6 +8,7 @@
 #
 
 include_recipe "rackspace_memcached"
+include_recipe "rackspace_iptables"
 
 case node['memcached']['config']['iptables']
 when "open"
@@ -18,4 +19,4 @@ when "open"
   node.set['rackspace_iptables']['config']['chains'][chain][rule]['comment'] = "open memcached port"
 end
 
-include_recipe "rackspace_iptables"
+log node['rackspace_iptables']['config']['chains']
