@@ -19,4 +19,22 @@ when 'open'
   add_iptables_rule(chain, rule)
 end
 
-log node['rackspace_iptables']['config']['chains']
+include_recipe 'rackspace_cloudmonitoring'
+
+node.set['rackspace_cloudmonitoring']['monitors'] = {
+ 'web_check' => {
+    'type' => 'remote.http',
+    'target_hostname' => "#{node['ipaddress']}",
+    'monitoring_zones_poll' => %w[
+      'mzdfw',
+      'mziad',
+      'mzord'
+    ],
+    'details' => {
+      'url' => "http://#{node['ipaddress']}/",
+      'method' => 'GET'
+    }
+  }
+}
+
+include_recipe 'rackspace_cloudmonitoring::monitors'
